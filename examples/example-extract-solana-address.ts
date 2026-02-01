@@ -8,8 +8,11 @@
 import { readPublicKeyFromSSH } from "../src/readPublicKeyFromSSH.ts";
 
 // OpenSSH ed25519 public key format
-const opensshPublicKey = `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK5xtyFM3UCVzEY/Uk3L0AmZg+c6ZqqrFrIWtepa3WTs gordan@neki.ch`;
-
+const opensshPublicKey = process.argv[2];
+if (!opensshPublicKey) {
+  console.error("Usage: node example-extract-solana-address.ts '<openssh-public-key>'");
+  process.exit(1);
+}
 console.log("Input OpenSSH Public Key:");
 console.log(opensshPublicKey);
 console.log();

@@ -1,20 +1,30 @@
+import 'colors';
 import { readFile } from "node:fs/promises";
 
 import { readPublicKeyFromSSH } from "./src/readPublicKeyFromSSH.ts";
 import { readPrivateKeyFromSSH } from "./src/readPrivateKeyFromSSH.ts";
 
+const keyPath = "./.devcontainer/.secrets/KEYS/anonymous-dev"
+
 const OPENSSH_dataString = await readFile(
-  "./.devcontainer/.secrets/KEYS/anonymous-dev",
+  keyPath,
   "utf-8",
 );
 
 const OPENSSH_dataStringPub = await readFile(
-  "./.devcontainer/.secrets/KEYS/anonymous-dev.pub",
+  keyPath + ".pub",
   "utf-8",
 );
+console.log("*".repeat(153));
+console.log("- Reading OpenSSH Private Key from File:".yellow);
+console.log(keyPath);
 
 const sshPublicUint8Array = readPublicKeyFromSSH(OPENSSH_dataStringPub);
 console.log("SSH Public Result Object:", sshPublicUint8Array);
+
+console.log("*".repeat(153));
+console.log("- Reading OpenSSH Public Key from File:".yellow);
+console.log(keyPath + ".pub");
 
 const sshPrivateUint8Array = await readPrivateKeyFromSSH(OPENSSH_dataString);
 console.log("Result Object:", sshPrivateUint8Array);

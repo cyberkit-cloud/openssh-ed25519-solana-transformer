@@ -5,8 +5,8 @@ import {
 } from "@solana/kit";
 
 export const readPrivateKeyFromSSH = async (sshPrivateKeyPEMString: string) => {
-  console.log("-".repeat(50));
-  console.log(`[readPrivateKeyFromSSH]`);
+  // console.log("-".repeat(50));
+  // console.log(`[readPrivateKeyFromSSH]`);
 
   const base64Data = sshPrivateKeyPEMString
     .replace(/-----BEGIN OPENSSH PRIVATE KEY-----/, "")
@@ -15,12 +15,12 @@ export const readPrivateKeyFromSSH = async (sshPrivateKeyPEMString: string) => {
 
   const bufferFromBase64 = Buffer.from(base64Data, "base64");
 
-  console.log('XXX', bufferFromBase64.toString('hex'));
+  // console.log('XXX', bufferFromBase64.toString('hex'));
 
-  console.log("✓ Buffer from Base64:", bufferFromBase64);
-  console.log("✓ Length of Buffer:", bufferFromBase64.length, "bytes");
+  // console.log("✓ Buffer from Base64:", bufferFromBase64);
+  // console.log("✓ Length of Buffer:", bufferFromBase64.length, "bytes");
 
-  console.log("✓ String:", bufferFromBase64.toString("utf-8"));
+  // console.log("✓ String:", bufferFromBase64.toString("utf-8"));
 
   /*
     "openssh-key-v1"0x00    # NULL-terminated "Auth Magic" string
@@ -43,28 +43,28 @@ export const readPrivateKeyFromSSH = async (sshPrivateKeyPEMString: string) => {
     padding bytes 0x010203  # pad to blocksize (see notes below)
     */
   const header = bufferFromBase64.slice(0, 15);
-  console.log("✓ Header:", header.toString("utf-8"));
+  // console.log("✓ Header:", header.toString("utf-8"));
 
   const cipherNameLength = bufferFromBase64.readUInt32BE(15);
   const cipherName = bufferFromBase64
     .slice(19, 19 + cipherNameLength)
     .toString("utf-8");
-  console.log("✓ Cipher Name:", cipherName);
+  //console.log("✓ Cipher Name:", cipherName);
 
   const kdfNameOffset = 19 + cipherNameLength;
   const kdfNameLength = bufferFromBase64.readUInt32BE(kdfNameOffset);
   const kdfName = bufferFromBase64
     .slice(kdfNameOffset + 4, kdfNameOffset + 4 + kdfNameLength)
     .toString("utf-8");
-  console.log("✓ KDF Name:", kdfName);
+  // console.log("✓ KDF Name:", kdfName);
 
   const kdfOffset = kdfNameOffset + 4 + kdfNameLength;
   const kdfLength = bufferFromBase64.readUInt32BE(kdfOffset);
-  console.log("✓ KDF Length:", kdfLength);
+  // console.log("✓ KDF Length:", kdfLength);
 
   const numKeysOffset = kdfOffset + 4 + kdfLength;
   const numKeys = bufferFromBase64.readUInt32BE(numKeysOffset);
-  console.log("✓ Number of Keys:", numKeys);
+  // console.log("✓ Number of Keys:", numKeys);
 
   const publicKeyOffset = numKeysOffset + 4;
   const publicKeyLength = bufferFromBase64.readUInt32BE(publicKeyOffset);
@@ -121,10 +121,10 @@ export const readPrivateKeyFromSSH = async (sshPrivateKeyPEMString: string) => {
     exportedPrivateKey32BytesUint8Array,
   );
 
-  console.log(
-    "✓ Exported Private Key (from PKCS8(crypto.subtle) - Uint8Array):",
-    exportedPrivateKey32BytesUint8Array,
-  );
+  // console.log(
+  //   "✓ Exported Private Key (from PKCS8(crypto.subtle) - Uint8Array):",
+  //   exportedPrivateKey32BytesUint8Array,
+  // );
 
   const exportedPublicKeyRAWArrayBuffer = await crypto.subtle.exportKey(
     "raw",
